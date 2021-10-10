@@ -1,7 +1,7 @@
 FLUT.SCSC
 ============
 
-Console-based program for solving a Flutter of rectangular plate problem with SCSC boundary conditions _(link to paper coming soon)_. 
+Console-based program for solving a Flutter of rectangular orthotropic (ORP) plate problem with SCSC boundary conditions _(link to paper coming soon)_. 
 
 ## Features
 
@@ -23,13 +23,17 @@ For some reason it is an error in SCSC subprogram, so it isn't stable in calcula
 
 * Set the plate parameters and material properties. Recommended to set them in code rather than change in console (deprecated):
 
-  `PNU` - Poissons modulus
+  `NUx` - Poissons modulus x direction
+
+  `NUy` - Poissons modulus y direction
 
   `H` - dimensiolens plate thickness 
 
-  `E` - Young modulus, kg/cm**2
+  `Ex` - Young modulus x direction, kg/cm**2
 
-  `RO` - plate material density. 
+  `Ey` - Young modulus y direction, kg/cm**2
+
+  `RO` - plate material density
 
   `BL` - half of the plate width (set 1.D0 for 2x2 plate)
 
