@@ -5,11 +5,17 @@ C Редакция от 01.02.2020
       character*26 PATH 
       REAL*8 K
       CHARACTER*3 KEY
-      COMMON /DATA/ K,H,BL,RO,DB
+      INTEGER :: i
+      CHARACTER(len=32) :: arg
       COMMON /D/ Dx,Dxy,Dy
+      COMMON /DATA/ K,H,BL,RO,DB,TJ1
       COMMON //PATH
       DATA PATH /'C:/reports/'/
 C
+      IF(COMMAND_ARGUMENT_COUNT().NE.8)THEN
+            WRITE(*,*)'ERROR, 8 COMMAND-LINE ARGUMENTS REQUIRED'
+            STOP
+      ENDIF
 C Определение характерных величин
 C
 C Характерное давление P0=1 атм (физическая)=1.0133E5 н/м**2=1.0333 кГ/см**2
@@ -17,18 +23,31 @@ C Характерное давление P0=1 атм (физическая)=1.0133E5 н/м**2=1.0333 кГ/см**2
 C
 C Коэффициент Пуассона PNU=0.33
       PNU=0.33
+      CALL get_command_argument(2, arg)
+      READ(arg,*)PNU
+      PNUx = PNU
+      CALL get_command_argument(3, arg)
+      READ(arg,*)PNUy
+      
 C Показатель политропы K=1.4 - это соответствует скорсти звука 331.26 м/сек
       K=1.4
 C
 C Безразмерная толщина пластинки H
 C      H=3.D-3
-      H = 0.01
+      H = 0.007
+      CALL get_command_argument(1, arg)
+      READ(arg,*)H
 C      WRITE (*,*) 'H = ?'
 C      READ (*,*) H
-      WRITE (*,*) 'H = ', H
-C      PAUSE
+      !WRITE (*,*) 'H = ', H
+      !PAUSE
 C Модуль Юнга для аллюминия E=0.7E6 кГ/см**2
-      E=7.0D5
+      E=0.7E6
+      CALL get_command_argument(4, arg)
+      READ(arg,*)E
+      Ex = E
+      CALL get_command_argument(5, arg)
+      READ(arg,*)Ey
 C      E=2.0D6
 C      E=1.1D6
 C      E=0.73D6
@@ -38,6 +57,8 @@ C Плотность воздуха 1.2928 (кг/м**3)
 C
 C Плотность материала пластины 2.7E3 (кг/м**3)
       RO=2.7E3
+      CALL get_command_argument(6, arg)
+      READ(arg,*)RO
 C      RO=7.8D3
 C      RO=4.5D3
 C      RO=2.8D3
@@ -48,82 +69,81 @@ c       BL = 0.5
 C
 C      BL=0.5D0
       BL=1.D0
-C      BL=2.4D0
-      WRITE(*,*) 'BL = ' , BL
-      WRITE(*,*) ' '
-      WRITE(*,*) 'If you want to change these parameters enter the name 
-     *changeable variable'      
-
-   20 READ (*,10) KEY
-   10 FORMAT(A)
-      IF(KEY.EQ.'P0 ') THEN
-      WRITE (*,*) 'P0 = ?'
-      READ (*,*) P0
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'PNU') THEN
-      WRITE (*,*) 'PNU= ?'
-      READ (*,*) PNU
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'K  ') THEN
-      WRITE (*,*) 'K  = ?'
-      READ (*,*) K
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'H  ') THEN
-      WRITE (*,*) 'H  = ?'
-      READ (*,*) H
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'E  ') THEN
-      WRITE (*,*) 'E  = ?'
-      READ (*,*) E
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'R  ') THEN
-      WRITE (*,*) 'R  = ?'
-      READ (*,*) R
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'RO ') THEN
-      WRITE (*,*) 'RO = ?'
-      READ (*,*) RO
-      GO TO 20
-      ENDIF
-      IF(KEY.EQ.'BL ') THEN
-      WRITE (*,*) 'BL = ?'
-      READ (*,*) BL
-      GO TO 20
-      ENDIF
+      !WRITE(*,*) 'BL = ' , BL
+   !   WRITE(*,*) ' '
+   !   WRITE(*,*) 'If you want to change these parameters enter the name 
+   !  *changeable variable'      
+   !
+   !20 READ (*,10) KEY
+   !10 FORMAT(A)
+   !   IF(KEY.EQ.'P0 ') THEN
+   !   WRITE (*,*) 'P0 = ?'
+   !   READ (*,*) P0
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'PNU') THEN
+   !   WRITE (*,*) 'PNU= ?'
+   !   READ (*,*) PNU
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'K  ') THEN
+   !   WRITE (*,*) 'K  = ?'
+   !   READ (*,*) K
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'H  ') THEN
+   !   WRITE (*,*) 'H  = ?'
+   !   READ (*,*) H
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'E  ') THEN
+   !   WRITE (*,*) 'E  = ?'
+   !   READ (*,*) E
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'R  ') THEN
+   !   WRITE (*,*) 'R  = ?'
+   !   READ (*,*) R
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'RO ') THEN
+   !   WRITE (*,*) 'RO = ?'
+   !   READ (*,*) RO
+   !   GO TO 20
+   !   ENDIF
+   !   IF(KEY.EQ.'BL ') THEN
+   !   WRITE (*,*) 'BL = ?'
+   !   READ (*,*) BL
+   !   GO TO 20
+   !   ENDIF
 C
-      WRITE(*,*) ' '
+      !WRITE(*,*) ' '
       C0=SQRT(K*9.81523E4*P0/R)
-      WRITE(*,15) C0
+      !WRITE(*,15) C0
    15 FORMAT('Sonic speed  C0 = ',E12.5)
-      WRITE(*,*) ' '
+      !WRITE(*,*) ' '
       C1=1.D2*SQRT(9.81523E4*E/RO)
       C1=SQRT((1.D6/10.19762)*E/RO)
-      WRITE(*,16) C1
+      !WRITE(*,16) C1
    16 FORMAT('Sonic speed in the Plate C1 = ',E12.5)
       C2=C1/C0
-      WRITE(*,17) C2
+      !WRITE(*,17) C2
    17 FORMAT('Dimensiolens sonic speed in the Plate C2 = ',E12.5)  
       !PAUSE
 C
 C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
-      Ex=7.0D5
+c      Ex=3.0D4
 C      Ex=305914.8
       Ex=Ex/P0
-      PNUx=0.33
-C      WRITE (*,*) 'NUx = ', PNUx
-      Ey=7.0D5
+c      PNUx=0.15
+c      Ey=2.0D4
 C      Ey=203943.2
       Ey=Ey/P0
-      PNUy=0.33
+c      PNUy=0.12
       Gxy=1.5D4
-      Gxy=2.6D4
+      CALL get_command_argument(7, arg)
+      READ(arg,*)Gxy
 C     Gxy=152957.4
       Gxy=Gxy/P0
       Dx=Ex*H**3/12.0/(1.0-PNUx*PNUy)
@@ -141,16 +161,19 @@ C Цилиндрическая жесткость DB
 C Безразмерная плотность
       RO=K*RO/R
 C
-
+      
+      CALL get_command_argument(5, arg)
+      READ(arg,*)TJ1
+      
       CALL FLUT34C
 C
       CALL FLUT33D
 C
-      WRITE (*,*)'Drawings of Re of eigenfunction are necessary (Y/N)'
+      !WRITE (*,*)'Drawings of Re of eigenfunction are necessary (Y/N)'
 
 C
-      READ (*,10) KEY
-      IF (KEY.NE.'Y') STOP
+      !READ (*,10) KEY
+      !IF (KEY.NE.'Y') STOP
 C
       CALL FLUT16C
 C
@@ -164,7 +187,7 @@ C 25.03.97 Тетрадь Флаттер N 4, стр. 69
       CHARACTER*1 KEY,KEY1
       REAL*8 K
       EXTERNAL F
-      COMMON /DATA/ K,H,BL,RO,DB
+      COMMON /DATA/ K,H,BL,RO,DB,TJ1
       COMMON /COM1/ IPR,NUMB
       COMMON /COM2/ NLAMDA,TJ,M,N,NT
       COMMON /COM3/ V,IN
@@ -178,48 +201,50 @@ C
       !READ (*,*) NUMB
       NUMB = 1
       IF (NUMB.NE.1.AND.NUMB.NE.2) THEN
-      WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
+      !WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
       STOP
       ENDIF
 C
-      WRITE (*,*) ' '
-      WRITE (*,*) 'TJ = ? (numerator denominator)'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'TJ = ? (numerator denominator)'
       !READ (*,*) TJ1,TJ2
-      TJ1 = 0.
-      TJ2 = 1.
+      !TJ1 = 0.
+      
+      TJ2 = 180.
       TJ=TJ1/TJ2
- 700  WRITE (*,*) ' '
-      WRITE (*,*) 'Automatic or manual finding of critical 
-     *speeds (Y/N/A/Q)'
-      READ (*,10) KEY1
+ 700  NOPAUSE=1!WRITE (*,*) ' '
+      !WRITE (*,*) 'Automatic or manual finding of critical 
+      !*speeds (Y/N/A/Q)'
+      !READ (*,10) KEY1
+      KEY1 = 'A'
    10 FORMAT(A)
       IF(KEY1.EQ.'Q') RETURN
       IF(KEY1.EQ.'A') GO TO 25
       IF(KEY1.EQ.'Y') GO TO 100
-      WRITE (*,*) ' '
-      WRITE (*,*) 'M = ?, N = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'M = ?, N = ?'
       READ (*,*) M,N
       IF(M.GT.40.OR.N.GT.40) THEN
-      WRITE (*,*) 'M or N more than 40. Stop'
+      !WRITE (*,*) 'M or N more than 40. Stop'
       STOP
       ENDIF
 C?
       NT=M*N
 C
 C
-  150 WRITE (*,*) ' '
-      WRITE (*,*) 'NLAMDA = ? '
+  150 NOPAUSE=1!WRITE (*,*) ' '
+      !WRITE (*,*) 'NLAMDA = ? '
       READ (*,*) NLAMDA
 C
-      WRITE (*,*) ' '
-      WRITE (*,*) 'A,B = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'A,B = ?'
       READ (*,*) A,B
 C
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
 C
       IF(F(A)*F(B).GT.0.) THEN
-      WRITE(*,*) 'On the ends of the set interval function
-     *of stability has identical signs'
+      !WRITE(*,*) 'On the ends of the set interval function
+      !*of stability has identical signs'
       GO TO 150
       ENDIF
       GO TO 200
@@ -229,45 +254,45 @@ C
       M=9
       N=9
       NT=M*N
-      NLAMDA=5
-      WRITE (*,*) 'The NLAMDA=5 value is established; To Change? (Y/N)'
+      NLAMDA=1
+      !WRITE (*,*) 'The NLAMDA=5 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'NLAMDA = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'NLAMDA = ?'
       READ (*,*) NLAMDA
       ENDIF
       V0=0.
-      WRITE (*,*) 'The V0=0 value is established.; To Change? (Y/N)'
+      !WRITE (*,*) 'The V0=0 value is established.; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'V0 = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'V0 = ?'
       READ (*,*) V0
       ENDIF
       STEP=0.01
-      WRITE (*,*) 'The STEP=0.01 value is established To Change? (Y/N)'
+      !WRITE (*,*) 'The STEP=0.01 value is established To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'STEP = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'STEP = ?'
       READ (*,*) STEP
       ENDIF
       V=2.6
       V=15.D0
-      WRITE (*,*) 'The V=2.6 value is established; To Change? (Y/N)'
+      !WRITE (*,*) 'The V=2.6 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'V = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'V = ?'
       READ (*,*) V
       ENDIF
       NSTEP=10
-      WRITE (*,*) 'The NSTEP=10 value is established; To Change? (Y/N)'
+      !WRITE (*,*) 'The NSTEP=10 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'NSTEP = ?'
+      !WRITE (*,*) ' '
+      !WRITE (*,*) 'NSTEP = ?'
       READ (*,*) NSTEP
       ENDIF
       GO TO 310
@@ -276,23 +301,23 @@ C
       M=9
       N=9
       NT=M*N
-      NLAMDA=5
+      NLAMDA=1
       V0=0.
       STEP=0.01
       V=2.6
       V=15.D0
       NSTEP=10
-      WRITE(*,26) NLAMDA
+      !WRITE(*,26) NLAMDA
    26 FORMAT(8HNLAMDA= ,I3)
-      WRITE(*,27) V0
+      !WRITE(*,27) V0
    27 FORMAT(4HV0= ,E9.2)
-      WRITE(*,28) STEP
+      !WRITE(*,28) STEP
    28 FORMAT(6HSTEP= ,E9.2)
-      WRITE(*,29) V
+      !WRITE(*,29) V
    29 FORMAT(4HV = ,E9.2)
-      WRITE(*,30) NSTEP
+      !WRITE(*,30) NSTEP
    30 FORMAT(8HNSTEP = ,I3)
-  310 WRITE(*,*) 'Grid 9x9; Beginning of search of the root.'
+  310 NOPAUSE=1!WRITE(*,*) 'Grid 9x9; Beginning of search of the root.'
       XX=V0
 C
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
@@ -321,17 +346,17 @@ c     pause
       F1(I)=F2(I)
       ENDDO
       GO TO 400
-  500 WRITE(*,*) 'End of search of the root'
-      WRITE (*,*) 'In the interval'
-      WRITE (*,526) V0,V
+  500 NOPAUSE=1!WRITE(*,*) 'End of search of the root'
+      !WRITE (*,*) 'In the interval'
+      !WRITE (*,526) V0,V
   526 FORMAT(E10.3,1H ,E10.3,1H )
-      WRITE (*,*)'Changes of signs at funct of stability are not rev'
+      !WRITE (*,*)'Changes of signs at funct of stability are not rev'
       GO TO 700
-  300 WRITE (*,15) IN
+  300 NOPAUSE=1!WRITE (*,15) IN
    15 FORMAT(5H IN =,I3)
       B=XX
       A=XX-STEP
-      WRITE (*,14) A,B
+      !WRITE (*,14) A,B
    14 FORMAT (4H A =,E10.3,4H B =,E10.3)
 C     STOP
       NLAMD=NLAMDA
@@ -342,26 +367,26 @@ C 200 EPS1=1.E-4
       IFAIL=0
       IPR=2
       CALL C05ADF (A,B,EPS1,ETA,F,X,IFAIL)
-      WRITE (*,*) 'IFAIL = ',IFAIL
+      !WRITE (*,*) 'IFAIL = ',IFAIL
       IF (IFAIL.NE.0) THEN
-      WRITE(*,*) 'Mistake in the subprogramme of calc of the root'
+      !WRITE(*,*) 'Mistake in the subprogramme of calc of the root'
       STOP
       ENDIF
-      WRITE (*,13) M,N
-   13 FORMAT(18Hto the grid of M =, I3,4H N =, I3,' Is found value 
-     * critical speed')
-      WRITE (*,12) X
+      !WRITE (*,13) M,N
+   13 NOPAUSE=1!FORMAT(18Hto the grid of M =, I3,4H N =, I3,' Is found value 
+      !* critical speed')
+      !WRITE (*,12) X
    12 FORMAT (1X,E15.8)
       IF(KEY1.NE.'Y'.AND.KEY1.NE.'A') THEN
       V=X
       IN=NLAMDA
-      WRITE (*,*) 'Result'
-      WRITE (*,70) V,IN
+      !WRITE (*,*) 'Result'
+      !WRITE (*,70) V,IN
       RETURN
       ENDIF
       V9=X
       IN9=IN
-      WRITE(*,*) 'Grid 19x19; Beginning of search of the root.'
+      !WRITE(*,*) 'Grid 19x19; Beginning of search of the root.'
       M=19
       N=19
       NT=M*N
@@ -427,66 +452,66 @@ c     pause
       ENDDO
       GO TO 402
 C     STOP
-  302 WRITE (*,15) IN
+  302 NOPAUSE=1!WRITE (*,15) IN
       A1=XX
       B1=XX+STEP
       IP=1
       GO TO 303
-  301 WRITE (*,15) IN
+  301 NOPAUSE=1!WRITE (*,15) IN
       B1=XX
       A1=XX-STEP
       IP=2
-      WRITE (*,14) A1,B1
+      !WRITE (*,14) A1,B1
   303 NLAMDA=IN
       CALL C05ADF (A1,B1,EPS1,ETA,F,X,IFAIL)
-      WRITE (*,*) 'IFAIL = ',IFAIL
+      !WRITE (*,*) 'IFAIL = ',IFAIL
       IF (IFAIL.NE.0) THEN
-      WRITE(*,*) 'The mistake in the subprogramme of calc of the root'
+      !WRITE(*,*) 'The mistake in the subprogramme of calc of the root'
       STOP
       ENDIF
-      WRITE (*,33) M,N
+      !WRITE (*,33) M,N
    33 FORMAT(18Hto the grid of M =, I3,4H N =, I3,' Is found value 
      * critical speed')
 
-      WRITE (*,12) X
-      WRITE (*,15) NLAMDA
+      !WRITE (*,12) X
+      !WRITE (*,15) NLAMDA
       V19(IP)=X
       IN19(IP)=NLAMDA
       IF(IP.EQ.2) THEN
       VL=A-NSTEP*STEP
-      WRITE (*,34) A
+      !WRITE (*,34) A
    34 FORMAT(39Hpoisk the root to the left of the point,E10.3)
       GO TO 501
       ENDIF
       ELSE
       CALL C05ADF (A,B,EPS1,ETA,F,X,IFAIL)
-      WRITE (*,*) 'IFAIL = ',IFAIL
+      !WRITE (*,*) 'IFAIL = ',IFAIL
       IF (IFAIL.NE.0) THEN
-      WRITE(*,*) 'Mistake in the subprogramme of calc of the root'
+      !WRITE(*,*) 'Mistake in the subprogramme of calc of the root'
       STOP
       ENDIF
-      WRITE (*,12) X
-      WRITE (*,15) NLAMDA
+      !WRITE (*,12) X
+      !WRITE (*,15) NLAMDA
       V19(1)=X
       IN19(1)=NLAMDA
       V=X
       IN=NLAMDA
       NLAMDA=NLAMD
-      WRITE (*,*) 'Результат'
+      !WRITE (*,*) 'Результат'
       WRITE (*,70) V,IN
       ENDIF
-      WRITE (*,*) ' '
-      WRITE (*,50) V9,IN9
-      WRITE (*,60) V19(1),IN19(1)
+      !WRITE (*,*) ' '
+      !WRITE (*,50) V9,IN9
+      !WRITE (*,60) V19(1),IN19(1)
       GO TO 800
 C     RETURN
   502 CONTINUE
-      WRITE (*,35) A
+      !WRITE (*,35) A
    35 FORMAT('Sleva from the point, critical speed is not found',E10.3,
      *'Critical speed is not found')
-      WRITE (*,50) V9,IN9
-      WRITE (*,60) V19(1),IN19(1)
-      WRITE (*,60) V19(2),IN19(2)
+      !WRITE (*,50) V9,IN9
+      !WRITE (*,60) V19(1),IN19(1)
+      !WRITE (*,60) V19(2),IN19(2)
    50 FORMAT(5H V9= ,E13.6,6H IN9 =,I3)
    60 FORMAT(5H V19=,E13.6,6H IN19=,I3)
       V=V19(2)
@@ -495,11 +520,11 @@ C     RETURN
       V=V19(1)
       IN=IN19(1)
       ENDIF
-      WRITE (*,*) ' '
+      !WRITE (*,*) ' '
       WRITE (*,*) 'Rezult'
-      WRITE (*,70) V,IN
+      WRITE (*,70) V
       NLAMDA=NLAMD
-   70 FORMAT(5H V = ,E13.6,5H IN =,I3)
+   70 FORMAT(E13.6,';',I3,';') 
       GO TO 700
   800 RETURN
       END
@@ -566,7 +591,7 @@ C Проверка условия устойчивости
       ENDIF
    52 FORMAT (9E8.1)
       F=FL
-      IF(IPR.EQ.2) WRITE (*,120) F,XX
+      !IF(IPR.EQ.2) WRITE (*,120) F,XX
   120 FORMAT (10H        F=,E12.4,10H        V=,E12.4)
       RETURN
       END
@@ -598,12 +623,15 @@ C    *RV1(NT),RV2(NT)
       COMMON /COM3/ V,IN
       COMMON //PATH      
 C
-      WRITE (*,*) 'Automatic or manual finding of eigen
-     *vector (Y/N/Q)'
-      READ (*,10) KEY1
-   10 FORMAT(A)
-      IF(KEY1.EQ.'Q') RETURN
-      IF(KEY1.EQ.'Y') GO TO 110
+      !PAUSE 
+      !STOP 
+      !WRITE (*,*) 'Automatic or manual finding of eigen 
+      !*vector (Y/N/Q)' 
+      !READ (*,10) KEY1 
+      !10 FORMAT(A) 
+      !IF(KEY1.EQ.'Q') RETURN 
+      GO TO 110
+      !IF(KEY1.EQ.'Y')  
       WRITE (*,*) ' '
       WRITE (*,*) 'M = ?, N = ?'
       READ (*,*) M,N
@@ -640,7 +668,7 @@ C Вычисление собственных значений матрицы H0
       MI=2
       NOUT = 4
       OPEN(UNIT=NOUT,FILE=TRIM(ADJUSTL(PATH))//'NOUT')
-      WRITE (*,75) V,IN
+      !WRITE (*,75) V,IN
       WRITE (NOUT,75) V,IN
    75 FORMAT(5H V = ,E13.6,5H IN =,I3)
       OPEN (8,FILE=TRIM(ADJUSTL(PATH))//'MATRA')
@@ -653,7 +681,7 @@ C Вычисление собственных значений матрицы H0
 C     CALL HQRM(NT,NT,LOW,IGH,H0,X,Y,IERR)
       CALL HQRM2(NT,NT,1,NT,H0,X,Y,IERR,200)
 C     CALL HQR (NT,NT,LOW,IGH,H0,X,Y,IERR)
-      WRITE(*,*) 'IERR = ',IERR
+      !WRITE(*,*) 'IERR = ',IERR
   12  FORMAT (4E18.11)
       WRITE(NOUT,*) 'Real part of eigenvalues'
       WRITE(NOUT,12) (X(I),I=1,NT)
@@ -667,7 +695,7 @@ C     WRITE(*,12) (Y(I),I=1,NT)
       DO I=1,NT
       IF (Y(I).GT.0.) IS=IS+1
       ENDDO
-      WRITE(*,120) IS
+      !WRITE(*,120) IS
   120 FORMAT(I3,'Complex couples')
       WRITE(NOUT,120) IS
       IL=0
@@ -677,7 +705,7 @@ C     NLAMDA=3
 C Вычисление минимального по модулю собственного значения
   100 IL=IL+1
       WRITE(NOUT,*) 'IL = ',IL
-      WRITE(*,*) 'IL = ',IL
+      !WRITE(*,*) 'IL = ',IL
 C     WRITE(*,*) 'NLAMDA = ',NLAMDA
       P=1.D25
       DO 33 I=1,NT
@@ -689,7 +717,7 @@ C     WRITE(*,*) 'NLAMDA = ',NLAMDA
       II=I
       ENDIF
    33 CONTINUE
-      WRITE(*,*) 'II = ',II
+      !WRITE(*,*) 'II = ',II
       CZ=CMPLX(X(II),Y(II))
 C     WRITE (*,*) CZ
       LAMDA(IL)=CZ
@@ -697,29 +725,29 @@ C     WRITE (*,*) CZ
   115 FORMAT(I3,' - ое eigenvalue')
       WRITE(NOUT,*) ' '
       WRITE(NOUT,12) CZ
-      WRITE (*,115) IL
-      WRITE(*,*) ' '
-      WRITE(*,12) CZ
+      !WRITE (*,115) IL
+      !WRITE(*,*) ' '
+      !WRITE(*,12) CZ
 C Проверка условия устойчивости
       FL=REAL(CZ)*K**2-RO*H*DIMAG(CZ)**2
-      WRITE (*,*) 'Check of stability condition'
-      WRITE(*,12) FL
+      !WRITE (*,*) 'Check of stability condition'
+      !WRITE(*,12) FL
       WRITE (NOUT,*) 'Check of stability condition'
       WRITE(NOUT,12) FL
 C     PAUSE
-      WRITE(*,*) 'To calculate the eigenvector (Y/N)'
-      READ(*,15) KEY
-  15  FORMAT(A)
-      IF(KEY.EQ.'Y') SELECT(II)=.TRUE.
-      IF(KEY.EQ.'N') GO TO 400
+      !WRITE(*,*) 'To calculate the eigenvector (Y/N)'
+      !READ(*,15) KEY
+      !15  FORMAT(A)
+      SELECT(II)=.TRUE.
+      !IF(KEY.EQ.'N') GO TO 400
       REWIND 8
       READ(8,12) (H0(I),I=1,NT*NT)
       CALL INVIT(NT,NT,H0,X,Y,SELECT,MMI,MI,ZZ,IERR,RM1,RV1,RV2)
-      WRITE(*,*) 'IERR = ',IERR
+      !WRITE(*,*) 'IERR = ',IERR
       IF (IERR.NE.0) THEN
       WRITE(*,*) 'Mistake in the subprogramme of
      * calculation of the eigenvector'
-      WRITE(*,*) ' IERR = ', IERR
+      !WRITE(*,*) ' IERR = ', IERR
       STOP
       ENDIF
       REWIND 8
@@ -745,11 +773,10 @@ C     PAUSE
       DO I=1,M
       DO J=1,N
       IJ=IJ+1
-      WRITE (NREZ1,150) XGRID(I),YGRID(J),
-     1URR(IJ)
+      WRITE (NREZ1,150) XGRID(I),YGRID(J),URR(IJ)
       ENDDO
       ENDDO
-      WRITE (*,*) 'Write Maple'
+      !WRITE (*,*) 'Write Maple'
 150   FORMAT(1X,F9.5,F9.5,F9.5)                 
       WRITE (NOUT,*) 'Eigenvector RE'
       WRITE (NOUT,12) (URR(I),I=1,NT)
@@ -777,7 +804,7 @@ C Обязательно M нечетное
       WRITE(NOUT,12) Y2
       PRINT 12,Y2
   200 CONTINUE
-      WRITE (*,*) 'Check of symmetry of the eigenvector'
+      !WRITE (*,*) 'Check of symmetry of the eigenvector'
       WRITE (NOUT,*) 'Check of symmetry of the eigenvector'
       NM=(M-1)/2
       DO 50 I=1,NM
@@ -789,7 +816,7 @@ C Обязательно M нечетное
       IF(ABS(Q).GT.P) P=ABS(Q)
    51 CONTINUE
    50 ER(I)=P
-      WRITE(*,52) (ER(I),I=1,NM)
+      !WRITE(*,52) (ER(I),I=1,NM)
       WRITE(NOUT,52) (ER(I),I=1,NM)
       IF(DIMAG(CZ).EQ.0.D0) GO TO 300
       DO 60 I=1,NM
@@ -801,7 +828,7 @@ C Обязательно M нечетное
       IF(ABS(Q).GT.P) P=ABS(Q)
    61 CONTINUE
    60 ER(I)=P
-      WRITE(*,52) (ER(I),I=1,NM)
+      !WRITE(*,52) (ER(I),I=1,NM)
       WRITE(NOUT,52) (ER(I),I=1,NM)
   300 CONTINUE
   400 CONTINUE
@@ -811,9 +838,9 @@ C Обязательно M нечетное
       GO TO 100
       ENDIF
       WRITE (NOUT,*) 'LAMDA'
-      WRITE (*,*) 'LAMDA'
+      !WRITE (*,*) 'LAMDA'
       WRITE (NOUT,70) (LAMDA(I),I=1,NLAMDA)
-      WRITE (*,70) (LAMDA(I),I=1,NLAMDA)
+      !WRITE (*,70) (LAMDA(I),I=1,NLAMDA)
    70 FORMAT(1X,2E18.11)
       RETURN
    52 FORMAT (9E8.1)
@@ -1273,7 +1300,7 @@ C     IF(J.GE.NT) GO TO 5
 
       !ЗНАЧЕНИЕ ОПРЕДЕЛИТЕЛЯ МАТРИЦЫ A_CD
       REAL*8 DET_A_CD
-      
+
       COMMON /D/ Dx,Dxy,Dy
 
       DATA PI/3.141592653589793238462643D0/
@@ -1500,8 +1527,8 @@ C     IF(J.GE.NT) GO TO 5
                       SM_VAL_D4 = 0.D0
 
                       DELTA = 
-	1                Dx*DX4(NU,J)*DX0(MXI,I)+2.*Dxy*DX2(NU,J)*DY2(MXI,I)+
-     2                DY0(NU,J)*DY4(MXI,I)
+	1                Dx*DX4(NU,J)*DX0(MXI,I)+Dxy*2.*DX2(NU,J)*DY2(MXI,I)+
+     2                Dy*DY0(NU,J)*DY4(MXI,I)
 
                       H(I1,I2) = 2./N * DELTA/STI
 
