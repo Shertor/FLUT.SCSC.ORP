@@ -6,6 +6,7 @@ C Редакция от 01.02.2020
       REAL*8 K
       CHARACTER*3 KEY
       COMMON /DATA/ K,H,BL,RO,DB
+      COMMON /D/ Dx,Dxy,Dy
       COMMON //PATH
       DATA PATH /'C:/reports/'/
 C
@@ -21,7 +22,7 @@ C Показатель политропы K=1.4 - это соответствует скорсти звука 331.26 м/сек
 C
 C Безразмерная толщина пластинки H
 C      H=3.D-3
-      H = 0.007
+      H = 0.01
 C      WRITE (*,*) 'H = ?'
 C      READ (*,*) H
       WRITE (*,*) 'H = ', H
@@ -112,9 +113,31 @@ C
 C
 C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
+      Ex=7.0D5
+C      Ex=305914.8
+      Ex=Ex/P0
+      PNUx=0.33
+C      WRITE (*,*) 'NUx = ', PNUx
+      Ey=7.0D5
+C      Ey=203943.2
+      Ey=Ey/P0
+      PNUy=0.33
+      Gxy=1.5D4
+      Gxy=2.6D4
+C     Gxy=152957.4
+      Gxy=Gxy/P0
+      Dx=Ex*H**3/12.0/(1.0-PNUx*PNUy)
+      Dy=Ey*H**3/12.0/(1.0-PNUx*PNUy)
+C     Dxy=Gxy*HL**3/12.0
+      Dxy=2.0*Gxy*H**3/12.0+Dx*PNUy
+      D=Dx
+      Dx=Dx/D
+      Dy=Dy/D
+      Dxy=Dxy/D
      
 C Цилиндрическая жесткость DB
       DB=E*H**3/12.D0/(1.D0-PNU**2)
+      DB=D
 C Безразмерная плотность
       RO=K*RO/R
 C
@@ -1250,7 +1273,8 @@ C     IF(J.GE.NT) GO TO 5
 
       !ЗНАЧЕНИЕ ОПРЕДЕЛИТЕЛЯ МАТРИЦЫ A_CD
       REAL*8 DET_A_CD
-
+      
+      COMMON /D/ Dx,Dxy,Dy
 
       DATA PI/3.141592653589793238462643D0/
 
@@ -1476,7 +1500,7 @@ C     IF(J.GE.NT) GO TO 5
                       SM_VAL_D4 = 0.D0
 
                       DELTA = 
-	1                DX4(NU,J)*DX0(MXI,I) + 2.*DX2(NU,J)*DY2(MXI,I) +
+	1                Dx*DX4(NU,J)*DX0(MXI,I)+2.*Dxy*DX2(NU,J)*DY2(MXI,I)+
      2                DY0(NU,J)*DY4(MXI,I)
 
                       H(I1,I2) = 2./N * DELTA/STI
