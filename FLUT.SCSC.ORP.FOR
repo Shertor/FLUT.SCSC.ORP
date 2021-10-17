@@ -162,7 +162,7 @@ C Безразмерная плотность
       RO=K*RO/R
 C
       
-      CALL get_command_argument(5, arg)
+      CALL get_command_argument(8, arg)
       READ(arg,*)TJ1
       
       CALL FLUT34C
