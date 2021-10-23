@@ -1,6 +1,6 @@
       PROGRAM FLUTBP14
-C Флаттер прямоугольной пластины. Версия 1.4 от 24.06.97
-C Редакция от 01.02.2020
+C Флаттер прямоугольной пластины
+      
       IMPLICIT REAL*8 (A-H,O-Z)
       character*26 PATH 
       REAL*8 K
@@ -16,11 +16,12 @@ C
             WRITE(*,*)'ERROR, 8 COMMAND-LINE ARGUMENTS REQUIRED'
             STOP
       ENDIF
-C Определение характерных величин
-C
+      
+C ОПРЕДЕЛЕНИЕ ХАРАКТЕРНЫХ ВЕЛИЧИН
+
 C Характерное давление P0=1 атм (физическая)=1.0133E5 н/м**2=1.0333 кГ/см**2
       P0=1.0333
-C
+
 C Коэффициент Пуассона PNU=0.33
       PNU=0.33
       CALL get_command_argument(2, arg)
@@ -32,15 +33,13 @@ C Коэффициент Пуассона PNU=0.33
 C Показатель политропы K=1.4 - это соответствует скорсти звука 331.26 м/сек
       K=1.4
 C
+      
 C Безразмерная толщина пластинки H
-C      H=3.D-3
       H = 0.007
       CALL get_command_argument(1, arg)
       READ(arg,*)H
-C      WRITE (*,*) 'H = ?'
-C      READ (*,*) H
-      !WRITE (*,*) 'H = ', H
-      !PAUSE
+C
+      
 C Модуль Юнга для аллюминия E=0.7E6 кГ/см**2
       E=0.7E6
       CALL get_command_argument(4, arg)
@@ -48,120 +47,60 @@ C Модуль Юнга для аллюминия E=0.7E6 кГ/см**2
       Ex = E
       CALL get_command_argument(5, arg)
       READ(arg,*)Ey
-C      E=2.0D6
-C      E=1.1D6
-C      E=0.73D6
 C
-C Плотность воздуха 1.2928 (кг/м**3)
+
+C     Плотность воздуха 1.2928 (кг/м**3)
       R=1.2928
-C
-C Плотность материала пластины 2.7E3 (кг/м**3)
+      
+C     Плотность материала пластины 2.7E3 (кг/м**3)
       RO=2.7E3
       CALL get_command_argument(6, arg)
       READ(arg,*)RO
-C      RO=7.8D3
-C      RO=4.5D3
-C      RO=2.8D3
 C
-C Половина ширины пластины
-C      BL=0.5  
-c       BL = 0.5
-C
-C      BL=0.5D0
+
+
+C     Половина ширины пластины
       BL=1.D0
-      !WRITE(*,*) 'BL = ' , BL
-   !   WRITE(*,*) ' '
-   !   WRITE(*,*) 'If you want to change these parameters enter the name 
-   !  *changeable variable'      
-   !
-   !20 READ (*,10) KEY
-   !10 FORMAT(A)
-   !   IF(KEY.EQ.'P0 ') THEN
-   !   WRITE (*,*) 'P0 = ?'
-   !   READ (*,*) P0
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'PNU') THEN
-   !   WRITE (*,*) 'PNU= ?'
-   !   READ (*,*) PNU
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'K  ') THEN
-   !   WRITE (*,*) 'K  = ?'
-   !   READ (*,*) K
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'H  ') THEN
-   !   WRITE (*,*) 'H  = ?'
-   !   READ (*,*) H
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'E  ') THEN
-   !   WRITE (*,*) 'E  = ?'
-   !   READ (*,*) E
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'R  ') THEN
-   !   WRITE (*,*) 'R  = ?'
-   !   READ (*,*) R
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'RO ') THEN
-   !   WRITE (*,*) 'RO = ?'
-   !   READ (*,*) RO
-   !   GO TO 20
-   !   ENDIF
-   !   IF(KEY.EQ.'BL ') THEN
-   !   WRITE (*,*) 'BL = ?'
-   !   READ (*,*) BL
-   !   GO TO 20
-   !   ENDIF
 C
-      !WRITE(*,*) ' '
+
+C     Скорости звука
       C0=SQRT(K*9.81523E4*P0/R)
-      !WRITE(*,15) C0
+
    15 FORMAT('Sonic speed  C0 = ',E12.5)
-      !WRITE(*,*) ' '
       C1=1.D2*SQRT(9.81523E4*E/RO)
       C1=SQRT((1.D6/10.19762)*E/RO)
-      !WRITE(*,16) C1
    16 FORMAT('Sonic speed in the Plate C1 = ',E12.5)
       C2=C1/C0
-      !WRITE(*,17) C2
    17 FORMAT('Dimensiolens sonic speed in the Plate C2 = ',E12.5)  
-      !PAUSE
-C
-C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
+
+C     Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
-c      Ex=3.0D4
-C      Ex=305914.8
       Ex=Ex/P0
-c      PNUx=0.15
-c      Ey=2.0D4
-C      Ey=203943.2
       Ey=Ey/P0
-c      PNUy=0.12
+
+C     Модуль Сдвига
       Gxy=1.5D4
       CALL get_command_argument(7, arg)
       READ(arg,*)Gxy
-C     Gxy=152957.4
+C
       Gxy=Gxy/P0
+      
+C     Цилиндрическая жесткость DB   
       Dx=Ex*H**3/12.0/(1.0-PNUx*PNUy)
       Dy=Ey*H**3/12.0/(1.0-PNUx*PNUy)
-C     Dxy=Gxy*HL**3/12.0
       Dxy=2.0*Gxy*H**3/12.0+Dx*PNUy
       D=Dx
       Dx=Dx/D
       Dy=Dy/D
       Dxy=Dxy/D
-     
-C Цилиндрическая жесткость DB
-      DB=E*H**3/12.D0/(1.D0-PNU**2)
+      !DB=E*H**3/12.D0/(1.D0-PNU**2)
       DB=D
+      
 C Безразмерная плотность
       RO=K*RO/R
 C
       
+C     УГОЛ ПОТОКА
       CALL get_command_argument(8, arg)
       READ(arg,*)TJ1
       
@@ -169,20 +108,16 @@ C
 C
       CALL FLUT33D
 C
-      !WRITE (*,*)'Drawings of Re of eigenfunction are necessary (Y/N)'
-
-C
-      !READ (*,10) KEY
-      !IF (KEY.NE.'Y') STOP
-C
       CALL FLUT16C
 C
       CALL FLUT16D
 C
       STOP
       END
+
+C     FLUT34C SUBPROGRAMM
       SUBROUTINE FLUT34C
-C 25.03.97 Тетрадь Флаттер N 4, стр. 69
+C
       IMPLICIT REAL*8 (A-H,O-Z)
       CHARACTER*1 KEY,KEY1
       REAL*8 K
@@ -195,56 +130,40 @@ C 25.03.97 Тетрадь Флаттер N 4, стр. 69
       COMMON /ABH0H1/ AA,BB,H0,H1
       DIMENSION F1(50),F2(50),V19(2),IN19(2)
       DIMENSION AA(2500),BB(2500),H0(6250000),H1(6250000)
-C
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'Enter number of the boundary-value problem: NUMB = ?'
-      !READ (*,*) NUMB
+
       NUMB = 1
-      IF (NUMB.NE.1.AND.NUMB.NE.2) THEN
-      !WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
-      STOP
-      ENDIF
-C
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'TJ = ? (numerator denominator)'
-      !READ (*,*) TJ1,TJ2
-      !TJ1 = 0.
       
+C     ANGLE OF FLOW
       TJ2 = 180.
       TJ=TJ1/TJ2
- 700  NOPAUSE=1!WRITE (*,*) ' '
-      !WRITE (*,*) 'Automatic or manual finding of critical 
-      !*speeds (Y/N/A/Q)'
-      !READ (*,10) KEY1
+ 700  NOPAUSE=1
+      
       KEY1 = 'A'
    10 FORMAT(A)
       IF(KEY1.EQ.'Q') RETURN
       IF(KEY1.EQ.'A') GO TO 25
       IF(KEY1.EQ.'Y') GO TO 100
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'M = ?, N = ?'
+
+      
       READ (*,*) M,N
       IF(M.GT.40.OR.N.GT.40) THEN
-      !WRITE (*,*) 'M or N more than 40. Stop'
+
       STOP
       ENDIF
-C?
+C
       NT=M*N
 C
 C
-  150 NOPAUSE=1!WRITE (*,*) ' '
-      !WRITE (*,*) 'NLAMDA = ? '
+  150 NOPAUSE=1
+
       READ (*,*) NLAMDA
 C
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'A,B = ?'
       READ (*,*) A,B
 C
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
 C
       IF(F(A)*F(B).GT.0.) THEN
-      !WRITE(*,*) 'On the ends of the set interval function
-      !*of stability has identical signs'
+
       GO TO 150
       ENDIF
       GO TO 200
@@ -255,44 +174,41 @@ C
       N=9
       NT=M*N
       NLAMDA=1
-      !WRITE (*,*) 'The NLAMDA=5 value is established; To Change? (Y/N)'
+
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'NLAMDA = ?'
+
       READ (*,*) NLAMDA
       ENDIF
       V0=0.
-      !WRITE (*,*) 'The V0=0 value is established.; To Change? (Y/N)'
+      
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'V0 = ?'
+      
+      
       READ (*,*) V0
       ENDIF
       STEP=0.01
-      !WRITE (*,*) 'The STEP=0.01 value is established To Change? (Y/N)'
+     
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'STEP = ?'
+
+          
       READ (*,*) STEP
       ENDIF
       V=2.6
       V=15.D0
-      !WRITE (*,*) 'The V=2.6 value is established; To Change? (Y/N)'
+
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'V = ?'
       READ (*,*) V
       ENDIF
       NSTEP=10
-      !WRITE (*,*) 'The NSTEP=10 value is established; To Change? (Y/N)'
+      
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'NSTEP = ?'
+      
+      
       READ (*,*) NSTEP
       ENDIF
       GO TO 310
@@ -307,17 +223,17 @@ C
       V=2.6
       V=15.D0
       NSTEP=10
-      !WRITE(*,26) NLAMDA
+      
    26 FORMAT(8HNLAMDA= ,I3)
-      !WRITE(*,27) V0
+      
    27 FORMAT(4HV0= ,E9.2)
-      !WRITE(*,28) STEP
+      
    28 FORMAT(6HSTEP= ,E9.2)
-      !WRITE(*,29) V
+      
    29 FORMAT(4HV = ,E9.2)
-      !WRITE(*,30) NSTEP
+      
    30 FORMAT(8HNSTEP = ,I3)
-  310 NOPAUSE=1!WRITE(*,*) 'Grid 9x9; Beginning of search of the root.'
+  310 NOPAUSE=1
       XX=V0
 C
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
