@@ -134,7 +134,7 @@ C
       DIMENSION F1(50),F2(50),V19(2),IN19(2)
       DIMENSION AA(2500),BB(2500),H0(6250000),H1(6250000)
 
-      NUMB = 1
+      NUMB = 2
       
 C     ANGLE OF FLOW
       TJ2 = 180.
