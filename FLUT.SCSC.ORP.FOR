@@ -113,7 +113,7 @@ C
 C
 C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
-      Ex=7.0D5
+      Ex=3.0D5
 C      Ex=305914.8
       Ex=Ex/P0
       PNUx=0.33
@@ -121,7 +121,7 @@ C      WRITE (*,*) 'NUx = ', PNUx
       Ey=7.0D5
 C      Ey=203943.2
       Ey=Ey/P0
-      PNUy=0.33
+      PNUy=0.3
       Gxy=1.5D4
       Gxy=2.6D4
 C     Gxy=152957.4
@@ -176,7 +176,7 @@ C
       !WRITE (*,*) ' '
       !WRITE (*,*) 'Enter number of the boundary-value problem: NUMB = ?'
       !READ (*,*) NUMB
-      NUMB = 1
+      NUMB = 2
       IF (NUMB.NE.1.AND.NUMB.NE.2) THEN
       WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
       STOP
@@ -186,7 +186,7 @@ C
       WRITE (*,*) 'TJ = ? (numerator denominator)'
       !READ (*,*) TJ1,TJ2
       TJ1 = 0.
-      TJ2 = 1.
+      TJ2 = 180.
       TJ=TJ1/TJ2
  700  WRITE (*,*) ' '
       WRITE (*,*) 'Automatic or manual finding of critical 
@@ -949,7 +949,7 @@ C  Вычисление матрицы для свободно опертой и защемленной прямоугольной пластины
       ENDIF
 C     Построение матрицы H0
       CALL ZSL1 (A,N,-1.D0,+1.D0)
-      CALL ZSL1 (B,M,-BL,BL)
+      CALL ZSL1 (B,M,-1.D0,+1.D0)
       DO 1 I=1,NT
       DO 1 J=1,NT
     1 H0(I,J)=0.D0
