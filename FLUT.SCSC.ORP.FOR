@@ -113,17 +113,17 @@ C
 C
 C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
-      Ex=3.0D5
+      Ex=0.306E6
 C      Ex=305914.8
       Ex=Ex/P0
-      PNUx=0.33
+      PNUx=0.15
 C      WRITE (*,*) 'NUx = ', PNUx
-      Ey=7.0D5
+      Ey=0.204E6
 C      Ey=203943.2
       Ey=Ey/P0
-      PNUy=0.3
+      PNUy=0.12
       Gxy=1.5D4
-      Gxy=2.6D4
+      !Gxy=2.6D4
 C     Gxy=152957.4
       Gxy=Gxy/P0
       Dx=Ex*H**3/12.0/(1.0-PNUx*PNUy)
@@ -245,7 +245,7 @@ C
       WRITE (*,*) 'V0 = ?'
       READ (*,*) V0
       ENDIF
-      STEP=0.01
+      STEP=0.1
       WRITE (*,*) 'The STEP=0.01 value is established To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
@@ -276,7 +276,7 @@ C
       M=9
       N=9
       NT=M*N
-      NLAMDA=5
+      NLAMDA=1
       V0=0.
       STEP=0.01
       V=2.6
@@ -949,7 +949,7 @@ C  Вычисление матрицы для свободно опертой и защемленной прямоугольной пластины
       ENDIF
 C     Построение матрицы H0
       CALL ZSL1 (A,N,-1.D0,+1.D0)
-      CALL ZSL1 (B,M,-1.D0,+1.D0)
+      CALL ZSL1 (B,M,-BL,BL)
       DO 1 I=1,NT
       DO 1 J=1,NT
     1 H0(I,J)=0.D0
@@ -1500,8 +1500,8 @@ C     IF(J.GE.NT) GO TO 5
                       SM_VAL_D4 = 0.D0
 
                       DELTA = 
-	1                Dx*DX4(NU,J)*DX0(MXI,I)+2.*Dxy*DX2(NU,J)*DY2(MXI,I)+
-     2                DY0(NU,J)*DY4(MXI,I)
+	1                Dx*DX4(NU,J)*DX0(MXI,I)+Dxy*2.*DX2(NU,J)*DY2(MXI,I)+
+     2                Dy*DY0(NU,J)*DY4(MXI,I)
 
                       H(I1,I2) = 2./N * DELTA/STI
 
@@ -1511,7 +1511,7 @@ C     IF(J.GE.NT) GO TO 5
       ENDDO
       
       
-      DO 5 I=1,N*N
+      DO 5 I=1, N*N
           DO 6 J=I+1, N*N
 C     IF(J.GE.NT) GO TO 5
                   H(J,I)=(H(J,I)+H(I,J))/2.
