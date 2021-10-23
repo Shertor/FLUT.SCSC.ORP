@@ -1,6 +1,6 @@
       PROGRAM FLUTBP14
-C Флаттер прямоугольной пластины. Версия 1.4 от 24.06.97
-C Редакция от 01.02.2020
+      ! Флаттер прямоугольной пластины. Версия 1.4 от 24.06.97
+      ! Редакция от 01.02.2020
       IMPLICIT REAL*8 (A-H,O-Z)
       character*26 PATH 
       REAL*8 K
@@ -9,46 +9,36 @@ C Редакция от 01.02.2020
       COMMON /D/ Dx,Dxy,Dy
       COMMON //PATH
       DATA PATH /'C:/reports/'/
-C
-C Определение характерных величин
-C
-C Характерное давление P0=1 атм (физическая)=1.0133E5 н/м**2=1.0333 кГ/см**2
+      !
+      ! Определение характерных величин
+      
+      ! Характерное давление 
+      ! P0=1 атм (физическая)=1.0133E5 н/м**2=1.0333 кГ/см**2
       P0=1.0333
-C
-C Коэффициент Пуассона PNU=0.33
+      
+      ! Коэффициент Пуассона PNU=0.33
       PNU=0.33
-C Показатель политропы K=1.4 - это соответствует скорсти звука 331.26 м/сек
+      ! Показатель политропы K=1.4
+      ! соответствует скорсти звука 331.26 м/сек
       K=1.4
-C
-C Безразмерная толщина пластинки H
-C      H=3.D-3
+
+      ! Безразмерная толщина пластинки H
+      ! H=3.D-3
       H = 0.01
-C      WRITE (*,*) 'H = ?'
-C      READ (*,*) H
       WRITE (*,*) 'H = ', H
-C      PAUSE
-C Модуль Юнга для аллюминия E=0.7E6 кГ/см**2
+
+      ! Модуль Юнга для аллюминия E=0.7E6 кГ/см**2
       E=7.0D5
-C      E=2.0D6
-C      E=1.1D6
-C      E=0.73D6
-C
-C Плотность воздуха 1.2928 (кг/м**3)
+      
+      ! Плотность воздуха 1.2928 (кг/м**3)
       R=1.2928
-C
-C Плотность материала пластины 2.7E3 (кг/м**3)
+
+      ! Плотность материала пластины 2.7E3 (кг/м**3)
       RO=2.7E3
-C      RO=7.8D3
-C      RO=4.5D3
-C      RO=2.8D3
-C
-C Половина ширины пластины
-C      BL=0.5  
-c       BL = 0.5
-C
-C      BL=0.5D0
+
+      ! Половина ширины пластины
       BL=1.D0
-C      BL=2.4D0
+      
       WRITE(*,*) 'BL = ' , BL
       WRITE(*,*) ' '
       WRITE(*,*) 'If you want to change these parameters enter the name 
@@ -57,109 +47,106 @@ C      BL=2.4D0
    20 READ (*,10) KEY
    10 FORMAT(A)
       IF(KEY.EQ.'P0 ') THEN
-      WRITE (*,*) 'P0 = ?'
-      READ (*,*) P0
-      GO TO 20
+          WRITE (*,*) 'P0 = ?'
+          READ (*,*) P0
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'PNU') THEN
-      WRITE (*,*) 'PNU= ?'
-      READ (*,*) PNU
-      GO TO 20
+          WRITE (*,*) 'PNU= ?'
+          READ (*,*) PNU
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'K  ') THEN
-      WRITE (*,*) 'K  = ?'
-      READ (*,*) K
+          WRITE (*,*) 'K  = ?'
+          READ (*,*) K
       GO TO 20
       ENDIF
       IF(KEY.EQ.'H  ') THEN
-      WRITE (*,*) 'H  = ?'
-      READ (*,*) H
-      GO TO 20
+          WRITE (*,*) 'H  = ?'
+          READ (*,*) H
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'E  ') THEN
-      WRITE (*,*) 'E  = ?'
-      READ (*,*) E
-      GO TO 20
+          WRITE (*,*) 'E  = ?'
+          READ (*,*) E
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'R  ') THEN
-      WRITE (*,*) 'R  = ?'
-      READ (*,*) R
-      GO TO 20
+          WRITE (*,*) 'R  = ?'
+          READ (*,*) R
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'RO ') THEN
-      WRITE (*,*) 'RO = ?'
-      READ (*,*) RO
-      GO TO 20
+          WRITE (*,*) 'RO = ?'
+          READ (*,*) RO
+          GO TO 20
       ENDIF
       IF(KEY.EQ.'BL ') THEN
-      WRITE (*,*) 'BL = ?'
-      READ (*,*) BL
-      GO TO 20
+          WRITE (*,*) 'BL = ?'
+          READ (*,*) BL
+          GO TO 20
       ENDIF
-C
+
       WRITE(*,*) ' '
-      C0=SQRT(K*9.81523E4*P0/R)
+      C0 = SQRT(K*9.81523E4*P0/R)
       WRITE(*,15) C0
+      
    15 FORMAT('Sonic speed  C0 = ',E12.5)
       WRITE(*,*) ' '
+      
       C1=1.D2*SQRT(9.81523E4*E/RO)
       C1=SQRT((1.D6/10.19762)*E/RO)
       WRITE(*,16) C1
    16 FORMAT('Sonic speed in the Plate C1 = ',E12.5)
+      
       C2=C1/C0
       WRITE(*,17) C2
    17 FORMAT('Dimensiolens sonic speed in the Plate C2 = ',E12.5)  
-      !PAUSE
-C
-C Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
+
+      ! Безразмерное значение модуля Юнга ( E/P0 ) для аллюминия
       E=E/P0
       Ex=0.306E6
-C      Ex=305914.8
       Ex=Ex/P0
       PNUx=0.15
-C      WRITE (*,*) 'NUx = ', PNUx
       Ey=0.204E6
-C      Ey=203943.2
       Ey=Ey/P0
       PNUy=0.12
       Gxy=1.5D4
-      !Gxy=2.6D4
-C     Gxy=152957.4
       Gxy=Gxy/P0
       Dx=Ex*H**3/12.0/(1.0-PNUx*PNUy)
       Dy=Ey*H**3/12.0/(1.0-PNUx*PNUy)
-C     Dxy=Gxy*HL**3/12.0
       Dxy=2.0*Gxy*H**3/12.0+Dx*PNUy
       D=Dx
       Dx=Dx/D
       Dy=Dy/D
       Dxy=Dxy/D
      
-C Цилиндрическая жесткость DB
+      ! Цилиндрическая жесткость DB
       DB=E*H**3/12.D0/(1.D0-PNU**2)
       DB=D
-C Безразмерная плотность
+      ! Безразмерная плотность
       RO=K*RO/R
-C
 
       CALL FLUT34C
-C
-      CALL FLUT33D
-C
-      WRITE (*,*)'Drawings of Re of eigenfunction are necessary (Y/N)'
 
-C
+      CALL FLUT33D
+
+      WRITE (*,*)'Drawings of Re of eigenfunction are necessary (Y/N)'
       READ (*,10) KEY
       IF (KEY.NE.'Y') STOP
-C
+
       CALL FLUT16C
-C
+      
       CALL FLUT16D
-C
+
       STOP
       END
+
+      !
+      ! MODULES
+      !
       SUBROUTINE FLUT34C
-C 25.03.97 Тетрадь Флаттер N 4, стр. 69
+      !25.03.97 Тетрадь Флаттер N 4, стр. 69
       IMPLICIT REAL*8 (A-H,O-Z)
       CHARACTER*1 KEY,KEY1
       REAL*8 K
@@ -167,26 +154,26 @@ C 25.03.97 Тетрадь Флаттер N 4, стр. 69
       COMMON /DATA/ K,H,BL,RO,DB
       COMMON /COM1/ IPR,NUMB
       COMMON /COM2/ NLAMDA,TJ,M,N,NT
-      COMMON /COM3/ V,IN
+      COMMON /COM3/ V,INN
       COMMON /FL/ FLG(20)
       COMMON /ABH0H1/ AA,BB,H0,H1
       DIMENSION F1(50),F2(50),V19(2),IN19(2)
       DIMENSION AA(2500),BB(2500),H0(6250000),H1(6250000)
-C
-      !WRITE (*,*) ' '
-      !WRITE (*,*) 'Enter number of the boundary-value problem: NUMB = ?'
-      !READ (*,*) NUMB
+
+      ! NUMB = 1
       NUMB = 2
+      
       IF (NUMB.NE.1.AND.NUMB.NE.2) THEN
-      WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
-      STOP
+          WRITE (*,*) 'Wrong number of the boundary-value problem'
+          STOP
       ENDIF
-C
+      
       WRITE (*,*) ' '
       WRITE (*,*) 'TJ = ? (numerator denominator)'
-      !READ (*,*) TJ1,TJ2
+      
       TJ1 = 0.
       TJ2 = 180.
+      
       TJ=TJ1/TJ2
  700  WRITE (*,*) ' '
       WRITE (*,*) 'Automatic or manual finding of critical 
@@ -200,23 +187,27 @@ C
       WRITE (*,*) 'M = ?, N = ?'
       READ (*,*) M,N
       IF(M.GT.40.OR.N.GT.40) THEN
-      WRITE (*,*) 'M or N more than 40. Stop'
-      STOP
+          WRITE (*,*) 'M or N more than 40. Stop'
+          STOP
       ENDIF
-C?
+
       NT=M*N
-C
-C
+
   150 WRITE (*,*) ' '
       WRITE (*,*) 'NLAMDA = ? '
       READ (*,*) NLAMDA
-C
+
       WRITE (*,*) ' '
       WRITE (*,*) 'A,B = ?'
       READ (*,*) A,B
-C
+
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
-C
+
+      !
+      WRITE(*,*) "HI2"
+      PAUSE
+      
+      !
       IF(F(A)*F(B).GT.0.) THEN
       WRITE(*,*) 'On the ends of the set interval function
      *of stability has identical signs'
@@ -233,42 +224,48 @@ C
       WRITE (*,*) 'The NLAMDA=5 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'NLAMDA = ?'
-      READ (*,*) NLAMDA
+          WRITE (*,*) ' '
+          WRITE (*,*) 'NLAMDA = ?'
+          READ (*,*) NLAMDA
       ENDIF
+      
       V0=0.
       WRITE (*,*) 'The V0=0 value is established.; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'V0 = ?'
-      READ (*,*) V0
+          WRITE (*,*) ' '
+          WRITE (*,*) 'V0 = ?'
+          READ (*,*) V0
       ENDIF
+      
       STEP=0.1
       WRITE (*,*) 'The STEP=0.01 value is established To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'STEP = ?'
-      READ (*,*) STEP
+          WRITE (*,*) ' '
+          WRITE (*,*) 'STEP = ?'
+          READ (*,*) STEP
       ENDIF
+      
+      !
       V=2.6
       V=15.D0
+      !
       WRITE (*,*) 'The V=2.6 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'V = ?'
-      READ (*,*) V
+          WRITE (*,*) ' '
+          WRITE (*,*) 'V = ?'
+          READ (*,*) V
       ENDIF
+      
       NSTEP=10
       WRITE (*,*) 'The NSTEP=10 value is established; To Change? (Y/N)'
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
-      WRITE (*,*) ' '
-      WRITE (*,*) 'NSTEP = ?'
-      READ (*,*) NSTEP
+          WRITE (*,*) ' '
+          WRITE (*,*) 'NSTEP = ?'
+          READ (*,*) NSTEP
       ENDIF
       GO TO 310
    25 CONTINUE
@@ -294,48 +291,58 @@ C
    30 FORMAT(8HNSTEP = ,I3)
   310 WRITE(*,*) 'Grid 9x9; Beginning of search of the root.'
       XX=V0
-C
+
       CALL MATRH2 (M,N,NT,H0,AA,BB,H1,BL,NUMB)
-C
+
       FF=F(XX)
       DO I=1,NLAMDA
-      F1(I)=FLG(I)
+          F1(I)=FLG(I)
       ENDDO
+      
   400 XX=XX+STEP
+      
       IF(XX.LE.V) THEN
-      FF=F(XX)
-      DO I=1,NLAMDA
-      F2(I)=FLG(I)
-      ENDDO
+          FF=F(XX)
+          DO I=1,NLAMDA
+              F2(I)=FLG(I)
+          ENDDO
       ELSE
-      GO TO 500
+          GO TO 500
       ENDIF
+      
       DO I=1,NLAMDA
-      IF (F1(I)*F2(I).LT.0.) THEN
-      IN=I
-      GO TO 300
-      ENDIF
+          IF (F1(I)*F2(I).LT.0.) THEN
+              INN=I
+              GO TO 300
+          ENDIF
       ENDDO
-c     pause
+
       DO I=1,NLAMDA
-      F1(I)=F2(I)
+          F1(I)=F2(I)
       ENDDO
+      
       GO TO 400
+      
   500 WRITE(*,*) 'End of search of the root'
       WRITE (*,*) 'In the interval'
       WRITE (*,526) V0,V
   526 FORMAT(E10.3,1H ,E10.3,1H )
+      
       WRITE (*,*)'Changes of signs at funct of stability are not rev'
       GO TO 700
-  300 WRITE (*,15) IN
-   15 FORMAT(5H IN =,I3)
+
+  300 WRITE (*,15) INN
+   15 FORMAT(6H INN =,I3)
+      
       B=XX
       A=XX-STEP
+      
       WRITE (*,14) A,B
    14 FORMAT (4H A =,E10.3,4H B =,E10.3)
-C     STOP
+
       NLAMD=NLAMDA
-      NLAMDA=IN
+      NLAMDA=INN
+      
 C 200 EPS1=1.E-4
   200 EPS1=1.E-8
       ETA=0.0
@@ -354,13 +361,13 @@ C 200 EPS1=1.E-4
    12 FORMAT (1X,E15.8)
       IF(KEY1.NE.'Y'.AND.KEY1.NE.'A') THEN
       V=X
-      IN=NLAMDA
+      INN=NLAMDA
       WRITE (*,*) 'Result'
-      WRITE (*,70) V,IN
+      WRITE (*,70) V,INN
       RETURN
       ENDIF
       V9=X
-      IN9=IN
+      IN9=INN
       WRITE(*,*) 'Grid 19x19; Beginning of search of the root.'
       M=19
       N=19
@@ -388,7 +395,7 @@ C
       ENDIF
       DO I=1,NLAMD
       IF (F1(I)*F2(I).LT.0.) THEN
-      IN=I
+      INN=I
       GO TO 301
       ENDIF
       ENDDO
@@ -417,7 +424,7 @@ C*1.07.97
       ENDIF
       DO I=1,NLAMD
       IF (F1(I)*F2(I).LT.0.) THEN
-      IN=I
+      INN=I
       GO TO 302
       ENDIF
       ENDDO
@@ -427,17 +434,17 @@ c     pause
       ENDDO
       GO TO 402
 C     STOP
-  302 WRITE (*,15) IN
+  302 WRITE (*,15) INN
       A1=XX
       B1=XX+STEP
       IP=1
       GO TO 303
-  301 WRITE (*,15) IN
+  301 WRITE (*,15) INN
       B1=XX
       A1=XX-STEP
       IP=2
       WRITE (*,14) A1,B1
-  303 NLAMDA=IN
+  303 NLAMDA=INN
       CALL C05ADF (A1,B1,EPS1,ETA,F,X,IFAIL)
       WRITE (*,*) 'IFAIL = ',IFAIL
       IF (IFAIL.NE.0) THEN
@@ -470,10 +477,10 @@ C     STOP
       V19(1)=X
       IN19(1)=NLAMDA
       V=X
-      IN=NLAMDA
+      INN=NLAMDA
       NLAMDA=NLAMD
       WRITE (*,*) 'Результат'
-      WRITE (*,70) V,IN
+      WRITE (*,70) V,INN
       ENDIF
       WRITE (*,*) ' '
       WRITE (*,50) V9,IN9
@@ -490,16 +497,16 @@ C     RETURN
    50 FORMAT(5H V9= ,E13.6,6H IN9 =,I3)
    60 FORMAT(5H V19=,E13.6,6H IN19=,I3)
       V=V19(2)
-      IN=IN19(2)
+      INN=IN19(2)
       IF(V19(1).GT.0.0.AND.V19(1).LT.V19(2)) THEN
       V=V19(1)
-      IN=IN19(1)
+      INN=IN19(1)
       ENDIF
       WRITE (*,*) ' '
       WRITE (*,*) 'Rezult'
-      WRITE (*,70) V,IN
+      WRITE (*,70) V,INN
       NLAMDA=NLAMD
-   70 FORMAT(5H V = ,E13.6,5H IN =,I3)
+   70 FORMAT(5H V = ,E13.6,6H INN =,I3)
       GO TO 700
   800 RETURN
       END
@@ -595,7 +602,7 @@ C    *RV1(NT),RV2(NT)
       COMMON /COM1/ IPR,NUMB
       COMMON /DATA/ K,H,BL,RO,DB
       COMMON /COM2/ NLAMDA,TJ,M,N,NT
-      COMMON /COM3/ V,IN
+      COMMON /COM3/ V,INN
       COMMON //PATH      
 C
       WRITE (*,*) 'Automatic or manual finding of eigen
@@ -640,9 +647,9 @@ C Вычисление собственных значений матрицы H0
       MI=2
       NOUT = 4
       OPEN(UNIT=NOUT,FILE=TRIM(ADJUSTL(PATH))//'NOUT')
-      WRITE (*,75) V,IN
-      WRITE (NOUT,75) V,IN
-   75 FORMAT(5H V = ,E13.6,5H IN =,I3)
+      WRITE (*,75) V,INN
+      WRITE (NOUT,75) V,INN
+   75 FORMAT(5H V = ,E13.6,6H INN =,I3)
       OPEN (8,FILE=TRIM(ADJUSTL(PATH))//'MATRA')
       DO 170 I=1,NT
   170 SELECT(I)=.FALSE.
@@ -931,53 +938,61 @@ C
 C
       WRITE (7,13) X2
       WRITE (7,13) W2
-C
-      RETURN
-      END                                                               
+      
+      END
+      ! END FLUT16D
+
       SUBROUTINE MATRH2 (M,N,NT,H0,A,B,H1,BL,NUMB)
-C  Вычисление матрицы для свободно опертой и защемленной прямоугольной пластины
+      ! Вычисление матрицы для свободно опертой
+      ! и защемленной прямоугольной пластины
       IMPLICIT REAL*8 (A-H,O-Z)
       DIMENSION A(N,N),B(M,M),H0(NT,NT),H1(NT,NT)
+      
       IF (NUMB.NE.1.AND.NUMB.NE.2) THEN
-      WRITE (*,*) 'Wrong number of the boundary-value problem. STOP.'
-      STOP
+          WRITE (*,*) 'Wrong number of the boundary-value problem'
+          STOP
       ENDIF
       IF (NUMB.EQ.2) THEN
       !CALL BOXBIG (H1,N,M,NT,BL)
-      CALL SCSC_D0D4(H1,N,M,NT,BL)
-      GO TO 110
+          CALL SCSC_D0D4(H1,N,M,NT,BL)
+          GO TO 110
       ENDIF
-C     Построение матрицы H0
+      ! Построение матрицы H0
       CALL ZSL1 (A,N,-1.D0,+1.D0)
       CALL ZSL1 (B,M,-BL,BL)
       DO 1 I=1,NT
-      DO 1 J=1,NT
-    1 H0(I,J)=0.D0
+          DO 1 J=1,NT
+    1         H0(I,J)=0.D0
       DO 2 I=1,M
-      DO 2 J=1,M
-      DO 2 NU=1,N
-      I1=(I-1)*N+NU
-      DO 2 MU=1,N
-      J1=(J-1)*N+MU
-      IF(I.EQ.J) THEN
-      H0(I1,J1)=A(NU,MU)
-      IF(NU.EQ.MU) H0(I1,J1)=H0(I1,J1)+B(I,I)
-      ENDIF
-      IF(I.NE.J) THEN
-      IF(NU.EQ.MU) H0(I1,J1)=B(I,J)
-      ENDIF
+          DO 2 J=1,M
+              DO 2 NU=1,N
+                  I1=(I-1)*N+NU
+                  DO 2 MU=1,N
+                      J1=(J-1)*N+MU
+                      IF(I.EQ.J) THEN
+                          H0(I1,J1)=A(NU,MU)
+                          IF(NU.EQ.MU) H0(I1,J1)=H0(I1,J1)+B(I,I)
+                      ENDIF
+                      IF(I.NE.J) THEN
+                          IF(NU.EQ.MU) H0(I1,J1)=B(I,J)
+                      ENDIF
     2 CONTINUE
-C Вычисление квадрата матрицы H0
+      ! Вычисление квадрата матрицы H0
       DO 3 I=1,NT
-      DO 3 J=1,NT
-      P=0.D0
-      DO 4 L=1,NT
-    4 P=P+H0(I,L)*H0(L,J)
-    3 H1(I,J)=P
-C
+          DO 3 J=1,NT
+              P=0.D0
+              DO 4 L=1,NT
+    4             P=P+H0(I,L)*H0(L,J)
+    3         H1(I,J)=P
+
   110 CONTINUE
-      RETURN
+
+      WRITE(*,*) "HI"
+      PAUSE
       END
+
+
+
       SUBROUTINE MATRH3 (M,N,NT,H0,DX,DY,H1,TJ,BL,K,DB,V)
 C Вычисление матрицы для свободно опертой и защемленной прямоугольной пластины
       IMPLICIT REAL*8 (A-H,O-Z)
@@ -1278,12 +1293,6 @@ C     IF(J.GE.NT) GO TO 5
 
       DATA PI/3.141592653589793238462643D0/
 
-      !ИНТЕРПОЛИРУЕМАЯ ФУНКЦИЯ
-      F_D0(Z) = SIN(PI*Z)
-      F_D1(Z) = PI*COS(PI*Z)
-      F_D2(Z) = -PI**2*SIN(PI*Z)
-      F_D3(Z) = -PI**3*COS(PI*Z)
-      F_D4(Z) = PI**4*SIN(PI*Z)
 
       !ВЫЧИСЛЕНИЕ ЗНАЧЕНИЙ M'', M', M В ТОЧКАХ B И -B
       CALL DIFT(1.D0,N,T,T1,T2,T3,T4)
@@ -1517,6 +1526,5 @@ C     IF(J.GE.NT) GO TO 5
                   H(J,I)=(H(J,I)+H(I,J))/2.
     6     H(I,J)=H(J,I)
     5 CONTINUE
-      
       END
       !END SUBPROGRMM
