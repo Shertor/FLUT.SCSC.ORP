@@ -191,7 +191,7 @@ C
       
       READ (*,*) V0
       ENDIF
-      STEP=0.01
+      STEP=0.1
      
       READ (*,10) KEY
       IF(KEY.EQ.'Y') THEN
@@ -265,13 +265,13 @@ c     pause
       F1(I)=F2(I)
       ENDDO
       GO TO 400
-  500 NOPAUSE=1!WRITE(*,*) 'End of search of the root'
+  500 NOPAUSE=1 !WRITE(*,*) 'End of search of the root'
       !WRITE (*,*) 'In the interval'
       !WRITE (*,526) V0,V
   526 FORMAT(E10.3,1H ,E10.3,1H )
       !WRITE (*,*)'Changes of signs at funct of stability are not rev'
       GO TO 700
-  300 NOPAUSE=1!WRITE (*,15) IN
+  300 NOPAUSE=1 !WRITE (*,15) IN
    15 FORMAT(5H IN =,I3)
       B=XX
       A=XX-STEP
