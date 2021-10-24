@@ -6,6 +6,7 @@ C     SUBROUTINE HQRM(NM,N,LOW,IGH,H,WR,WI,IERR)                        86440004
       SUBROUTINE HQRM2(NM,N,LOW,IGH,H,WR,WI,IERR,NITER)
 C                                                                       86440005
       INTEGER I,J,K,L,M,N,EN,LL,MM,NA,NM,IGH,ITS,LOW,MP2,ENM2,IERR      86440006
+      INTEGER NITTER
       REAL*8 H(NM,N),WR(N),WI(N)                                        86440007
       REAL*8 P,Q,R,S,T,W,X,Y,ZZ,NORM,MACHEP                             86440008
       REAL*8 DSQRT,DABS,DSIGN                                           86440009
@@ -76,7 +77,8 @@ C                AND COMPUTE MATRIX NORM ::::::::::                     86440071
       DO 50 I = 1, N                                                    86440072
 C                                                                       86440073
          DO 40 J = K, N                                                 86440074
-   40    NORM = NORM + DABS(H(I,J))                                     86440075
+             NORM = NORM + DABS(H(I,J))
+   40    CONTINUE                                                       86440075
 C                                                                       86440076
          K = I                                                          86440077
          IF (I .GE. LOW .AND. I .LE. IGH) GO TO 50                      86440078
