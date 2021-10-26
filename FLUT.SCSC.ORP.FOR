@@ -162,7 +162,7 @@
       DIMENSION AA(2500),BB(2500),H0(6250000),H1(6250000)
 
       ! NUMB = 1
-      NUMB = 2
+      NUMB = 1
       
       DO I = 1,6250000
           H0(I) = 0.D0
@@ -179,7 +179,7 @@
       WRITE (*,*) ' '
       WRITE (*,*) 'TJ = ? (numerator denominator)'
       
-      TJ1 = 0.
+      TJ1 = 90.
       TJ2 = 180.
       
       TJ=TJ1/TJ2
@@ -1083,8 +1083,8 @@ C
       CALL DIFX1(DX,N,-1.D0,1.D0)
       CALL DIFX1(DY,M,-BL,BL)
 
-      DO I=1,2500
-          DO J=1,2500
+      DO I=1,NT
+          DO J=1,NT
               H0(I,J)=0.D0
           ENDDO
       ENDDO
