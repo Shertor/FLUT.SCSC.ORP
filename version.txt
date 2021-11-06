@@ -1,0 +1,4 @@
+version: 0.06.111
+info: results from computation is in:
+	- A flutter of a plate with mixed boundary conditions S. D. Algazin, I. A. Selivanov (not published yet)
+	- dissertation report 17.11.2021
