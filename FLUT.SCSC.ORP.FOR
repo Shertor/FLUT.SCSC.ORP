@@ -107,19 +107,7 @@ C     SHEAR MODULE H/M**2
           CALL get_command_argument(7, arg)
           READ(arg,*)Gxy
       ENDIF
-
       
-C     жхкхмдпхвеяйюъ феярйнярэ
-C     CYLINDRICAL STIFFNESS
-      Dx = Ex*HL**3/12.0/(1.0-NUx*NUy)
-      Dy = Ey*HL**3/12.0/(1.0-NUx*NUy)
-      Dxy = 2.0*Gxy*HL**3/12.0+Dx*NUy
-      D = Dx
-      DB = D
-      
-      CYL_RIGITY_X = Dx
-      CYL_RIGITY_XY = Dxy
-      CYL_RIGITY_Y = Dy      
 
 C     окнрмнярэ бнгдсую 1.2928 (йц/л**3)
 C     AIR DENSITY 1.2928 KG/M**3
@@ -169,10 +157,23 @@ C     DIMENSIONLESS
       Ex = Ex/P0
       Ey = Ey/P0
       Gxy = Gxy/P0
+
       
+C     жхкхмдпхвеяйюъ феярйнярэ
+C     CYLINDRICAL STIFFNESS
+      Dx = Ex*HL**3/12.0/(1.0-NUx*NUy)
+      Dy = Ey*HL**3/12.0/(1.0-NUx*NUy)
+      Dxy = 2.0*Gxy*HL**3/12.0+Dx*NUy
+      D = Dx
+      DB = D
+
       Dx = Dx/D
       Dy = Dy/D
       Dxy = Dxy/D
+      
+      CYL_RIGITY_X = Dx
+      CYL_RIGITY_XY = Dxy
+      CYL_RIGITY_Y = Dy  
       
       RO=K*RO/R
 
